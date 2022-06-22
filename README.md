@@ -3,6 +3,7 @@ project for c/c++ course
 CW1
 ![image](https://user-images.githubusercontent.com/89931940/175060572-6555b432-a8ad-4b6f-ba71-c75928d44ba6.png)
 
+<br>
 Initial data
 
 The initial data is located into a data structure consisting of arrays of pointers, headers and items.
