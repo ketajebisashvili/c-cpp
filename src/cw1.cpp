@@ -20,466 +20,446 @@
 
 using namespace std;
 
- 
+void printStruct(HEADER_B *ps1);
 
-void printStruct(HEADER_B* ps1);
+HEADER_B *InsertItem(HEADER_B *p, char *pNewItemID = 0);
 
-HEADER_B* InsertItem(HEADER_B* p, char* pNewItemID = 0);
-
-HEADER_B* RemoveItem(HEADER_B* p, char* pItemID);
+HEADER_B *RemoveItem(HEADER_B *p, char *pItemID);
 
 int main()
 
 {
 
-       HEADER_B* ps1 = GetStruct1(4, 30);
+    HEADER_B *ps1 = GetStruct1(4, 30);
 
-       printStruct(ps1);
+    printStruct(ps1);
 
-       const char* Cases[] = { "Z A", "Z Z", "Z K", "A Z", "A A", "A K", "G Z", "G A", "G K", "M A", "MBa", "M Bb", "M Z" };
+    const char *Cases[] = {"Z A", "Z Z", "Z K", "A Z", "A A", "A K", "G Z", "G A", "G K", "M A", "MBa", "M Bb", "M Z"};
 
-       for (int i = 0; i < 13; i++)
+    for (int i = 0; i < 13; i++)
 
-       {
+    {
 
-             char* lol = (char*)malloc(strlen(Cases[i]) * sizeof(char));
+        char *lol = (char *)malloc(strlen(Cases[i]) * sizeof(char));
 
-             strcpy(lol, Cases[i]);
+        strcpy(lol, Cases[i]);
 
-             ps1 = InsertItem(ps1, lol);
+        ps1 = InsertItem(ps1, lol);
+    }
 
-       }
+    printStruct(ps1);
 
-       printStruct(ps1);
+    for (int i = 0; i < 13; i++)
 
-       for (int i = 0; i < 13; i++)
+    {
 
-             {
+        char *lol = (char *)malloc(strlen(Cases[i]) * sizeof(char));
 
-                    char* lol = (char*)malloc(strlen(Cases[i]) * sizeof(char));
+        strcpy(lol, Cases[i]);
 
-                    strcpy(lol, Cases[i]);
+        ps1 = RemoveItem(ps1, lol);
+    }
 
-                    ps1 = RemoveItem(ps1, lol);
+    printStruct(ps1);
 
-             }
-
-             printStruct(ps1);
-
-      
-
-       return 0;
-
+    return 0;
 }
 
- 
+ITEM4 *GetMyItem(ITEM4 *pList, char *pChar)
+{
 
-ITEM4* GetMyItem(ITEM4* pList, char* pChar) {
+    if (!pList || !pChar)
+        return 0;
 
-       if (!pList || !pChar) return 0;
+    ITEM4 *pItem;
 
-       ITEM4* pItem;
+    for (pItem = pList; pItem && strcmp(pChar, pItem->pID); pItem = pItem->pNext)
+        ;
 
-       for (pItem = pList; pItem && strcmp(pChar, pItem->pID); pItem = pItem->pNext);
-
-       return pItem;
-
+    return pItem;
 }
 
-HEADER_B* GetHeaderPositionB(HEADER_B* pList, char pChar) {
+HEADER_B *GetHeaderPositionB(HEADER_B *pList, char pChar)
+{
 
-       if (!pList || !pChar) return 0;
+    if (!pList || !pChar)
+        return 0;
 
-       HEADER_B* pB;
+    HEADER_B *pB;
 
-       for (pB = pList; pB; pB = pB->pNext) {
+    for (pB = pList; pB; pB = pB->pNext)
+    {
 
-             if (pChar == pB->cBegin) break;
+        if (pChar == pB->cBegin)
+            break;
+    }
 
-       }
-
-       return pB;
-
+    return pB;
 }
 
-HEADER_A* GetHeaderPositionA(HEADER_A* pList, char pKey) {
+HEADER_A *GetHeaderPositionA(HEADER_A *pList, char pKey)
+{
 
-       if (!pList || !pKey) return 0;
+    if (!pList || !pKey)
+        return 0;
 
-       HEADER_A* pA = pList;
+    HEADER_A *pA = pList;
 
-       while (pA) {
+    while (pA)
+    {
 
-             if (pKey == pA->cBegin) break;
+        if (pKey == pA->cBegin)
+            break;
 
-             pA = pA->pNext;
+        pA = pA->pNext;
+    }
 
-       }
-
-       return pA;
-
+    return pA;
 }
 
- 
+void printStruct(HEADER_B *p)
+{
 
-void printStruct(HEADER_B* p) {
+    int j = 0;
 
-       int j = 0;
+    HEADER_B *hB = p;
 
-       HEADER_B* hB = p;
+    while (hB)
+    {
 
-       while (hB) {
+        HEADER_A *hA = hB->pHeaderA;
 
-             HEADER_A* hA = hB->pHeaderA;
+        while (hA)
+        {
 
-             while (hA) {
+            ITEM4 *pI = (ITEM4 *)hA->pItems;
 
-                    ITEM4* pI = (ITEM4*)hA->pItems;
+            while (pI)
+            {
 
-                    while (pI) {
+                printf("%d) %s %lu %s\n", ++j, pI->pID, pI->Code, pI->pDate);
 
-                           printf("%d) %s %lu %s\n", ++j, pI->pID, pI->Code, pI->pDate);
+                pI = pI->pNext;
+            }
 
-                           pI = pI->pNext;
+            hA = hA->pNext;
+        }
 
-                    }
-
-                    hA = hA->pNext;
-
-             }
-
-             hB = hB->pNext;
-
-       }
-
+        hB = hB->pNext;
+    }
 }
 
-bool CheckForValidity(char* pChar)
+bool CheckForValidity(char *pChar)
 
 {
 
-       char* pSpace = strchr(pChar, ' ');
+    char *pSpace = strchr(pChar, ' ');
 
-       if (pSpace != NULL)
+    if (pSpace != NULL)
 
-       {
+    {
 
-             if (*(pChar + 1) != ' ')
+        if (*(pChar + 1) != ' ')
 
-             {
+        {
 
-                    return false;
+            return false;
+        }
 
-             }
+        if (*(pSpace + 2) != NULL)
 
- 
+        {
 
-             if (*(pSpace + 2) != NULL)
+            return false;
+        }
+    }
 
-             {
+    else
 
-                    return false;
+    {
 
-             }
+        return false;
+    }
 
-       }
-
-       else
-
-       {
-
-             return false;
-
-       }
-
- 
-
-       return true;
-
+    return true;
 }
 
- 
+HEADER_B *InsertItem(HEADER_B *p, char *pNewItemID)
+{
 
-HEADER_B* InsertItem(HEADER_B* p, char* pNewItemID) {
+    if (pNewItemID != 0)
 
-       if (pNewItemID != 0)
+    {
 
-       {
+        if (CheckForValidity(pNewItemID) == false)
 
-             if (CheckForValidity(pNewItemID) == false)
+        {
 
-             {
+            cout << "ERROR! Given index is wrong" << endl;
 
-                    cout << "ERROR! Given index is wrong" << endl;
+            return p;
+        }
+    }
 
-                    return p;
+    ITEM4 *pNewItem = (ITEM4*)GetItem(1, pNewItemID);
 
-             }
+    if (!pNewItem)
+        return p;
 
-       }
+    char *pFirstWord = pNewItemID;
 
- 
+    char *pSecondWord = strchr(pNewItemID, ' ') + 1;
 
-       ITEM4* pNewItem = (ITEM4*)GetItem(1, pNewItemID);
+    HEADER_B *hB = p;
 
-       if (!pNewItem) return p;
+    HEADER_B *holdhB = p;
 
- 
+    bool Bexists = false;
 
-       char* pFirstWord = pNewItemID;
+    char holdW1 = pFirstWord[0];
 
-       char* pSecondWord = strchr(pNewItemID, ' ') + 1;
+    while (holdhB)
+    {
 
- 
+        if (holdhB->cBegin == holdW1)
+        {
 
-       HEADER_B* hB = p;
+            Bexists = true;
 
-       HEADER_B* holdhB = p;
+            break;
+        }
 
-       bool Bexists = false;
+        holdhB = holdhB->pNext;
+    }
 
-       char holdW1 = pFirstWord[0];
+    if (!Bexists)
+    {
 
-       while (holdhB) {
+        HEADER_B **tracer = &p;
 
-             if (holdhB->cBegin == holdW1) {
+        HEADER_B *newHB = new HEADER_B;
 
-                    Bexists = true;
+        newHB->cBegin = holdW1;
 
-                    break;
+        while (*tracer && (*tracer)->cBegin < holdW1)
+        {
 
-             }
+            tracer = &(*tracer)->pNext;
+        }
 
-             holdhB = holdhB->pNext;
+        newHB->pNext = *tracer;
 
-       }
+        *tracer = newHB;
 
-       if (!Bexists) {
+        HEADER_A *newHA = new HEADER_A;
 
-             HEADER_B** tracer = &p;
+        newHB->pHeaderA = newHA;
 
-             HEADER_B* newHB = new HEADER_B;
+        newHA->cBegin = pSecondWord[0];
 
-             newHB->cBegin = holdW1;
+        newHA->pItems = pNewItem;
 
-             while (*tracer && (*tracer)->cBegin < holdW1) {
+        pNewItem->pNext = NULL;
 
-                    tracer = &(*tracer)->pNext;
+        newHA->pNext = NULL;
 
-             }
+        return p;
+    }
 
-             newHB->pNext = *tracer;
+    HEADER_A *hA = holdhB->pHeaderA;
 
-             *tracer = newHB;
+    HEADER_A *holdhA = holdhB->pHeaderA;
 
-             HEADER_A* newHA = new HEADER_A;
+    bool Aexists = false;
 
-             newHB->pHeaderA = newHA;
+    char tmpWA = pSecondWord[0];
 
-             newHA->cBegin = pSecondWord[0];
+    while (holdhA)
+    {
 
-             newHA->pItems = pNewItem;
+        if (holdhA->cBegin == tmpWA)
+        {
 
-             pNewItem->pNext = NULL;
+            Aexists = true;
 
-             newHA->pNext = NULL;
+            break;
+        }
 
-             return p;
+        holdhA = holdhA->pNext;
+    }
 
-       }
+    if (!Aexists)
+    {
 
-       HEADER_A* hA = holdhB->pHeaderA;
+        HEADER_A **tracer = &holdhB->pHeaderA;
 
-       HEADER_A* holdhA = holdhB->pHeaderA;
+        HEADER_A *newHA = new HEADER_A;
 
-       bool Aexists = false;
+        newHA->cBegin = tmpWA;
 
-       char tmpWA = pSecondWord[0];
+        while ((*tracer) && (*tracer)->cBegin < tmpWA)
+        {
 
-       while (holdhA) {
+            tracer = &(*tracer)->pNext;
+        }
 
-             if (holdhA->cBegin == tmpWA) {
+        newHA->pNext = *tracer;
 
-                    Aexists = true;
+        *tracer = newHA;
 
-                    break;
+        newHA->pItems = pNewItem;
 
-             }
+        return p;
+    }
 
-             holdhA = holdhA->pNext;
+    ITEM4 *holdItem = (ITEM4 *)holdhA->pItems;
 
-       }
+    while (holdItem)
+    {
 
-       if (!Aexists) {
+        if (GetMyItem(holdItem, pNewItemID))
+        {
 
-             HEADER_A** tracer = &holdhB->pHeaderA;
+            printf("item ID exists\n");
 
-             HEADER_A* newHA = new HEADER_A;
+            return p;
+        }
 
-             newHA->cBegin = tmpWA;
+        holdItem = holdItem->pNext;
+    }
 
-             while ((*tracer) && (*tracer)->cBegin < tmpWA) {
+    holdItem = (ITEM4 *)holdhA->pItems;
 
-                    tracer = &(*tracer)->pNext;
+    pNewItem->pNext = holdItem;
 
-             }
+    holdhA->pItems = pNewItem;
 
-             newHA->pNext = *tracer;
-
-             *tracer = newHA;
-
-             newHA->pItems = pNewItem;
-
-             return p;
-
-       }
-
-       ITEM4* holdItem = (ITEM4*)holdhA->pItems;
-
-       while (holdItem) {
-
-             if (GetMyItem(holdItem, pNewItemID)) {
-
-                    printf("item ID exists\n");
-
-                    return p;
-
-             }
-
-             holdItem = holdItem->pNext;
-
-       }
-
-       holdItem = (ITEM4*)holdhA->pItems;
-
-       pNewItem->pNext = holdItem;
-
-       holdhA->pItems = pNewItem;
-
-       return p;
-
+    return p;
 }
 
- 
+HEADER_B *RemoveItem(HEADER_B *p, char *pItemID)
+{
 
-HEADER_B* RemoveItem(HEADER_B* p, char* pItemID) {
+    if (pItemID != 0)
 
-       if (pItemID != 0)
+    {
 
-       {
+        if (CheckForValidity(pItemID) == false)
 
-             if (CheckForValidity(pItemID) == false)
+        {
 
-             {
+            cout << "ERROR! Given index is wrong" << endl;
 
-                    cout << "ERROR! Given index is wrong" << endl;
+            return p;
+        }
+    }
 
-                    return p;
+    char pFirstWord = *pItemID;
 
-             }
+    char pSecondWord = *(strchr(pItemID, ' ') + 1);
 
-       }
+    HEADER_B *holdhB = GetHeaderPositionB(p, pFirstWord);
 
-       char pFirstWord = *pItemID;
+    if (!holdhB)
+    {
 
-       char pSecondWord = *(strchr(pItemID, ' ') + 1);
+        printf("item does not exist\n");
 
-       HEADER_B* holdhB = GetHeaderPositionB(p, pFirstWord);
+        return p;
+    }
 
-       if (!holdhB) {
+    HEADER_A *holdhA = GetHeaderPositionA(holdhB->pHeaderA, pSecondWord);
 
-             printf("item does not exist\n");
+    if (!holdhA)
+    {
 
-             return p;
+        printf("item does not exist\n");
 
-       }
+        return p;
+    }
 
-       HEADER_A* holdhA = GetHeaderPositionA(holdhB->pHeaderA, pSecondWord);
+    ITEM4 *tmpI = (ITEM4 *)holdhA->pItems;
 
-       if (!holdhA) {
+    if (!tmpI)
+    {
 
-             printf("item does not exist\n");
+        printf("item does not exist\n");
 
-             return p;
+        return p;
+    }
 
-       }
+    ITEM4 *prevI, *pI;
 
-       ITEM4* tmpI = (ITEM4*)holdhA->pItems;
+    prevI = NULL;
 
-       if (!tmpI) {
+    for (pI = tmpI; pI; prevI = pI, pI = pI->pNext)
+    {
 
-              printf("item does not exist\n");
+        if (strcmp(pItemID, pI->pID) == 0)
+        {
 
-             return p;
+            if (prevI == NULL)
+                holdhA->pItems = pI->pNext;
 
-       }
+            else
+                prevI->pNext = pI->pNext;
 
-       ITEM4* prevI, * pI;
+            delete pI;
 
-       prevI = NULL;
+            break;
+        }
+    }
 
-       for (pI = tmpI; pI; prevI = pI, pI = pI->pNext) {
+    if (!tmpI)
+    {
 
-             if (strcmp(pItemID, pI->pID) == 0) {
+        HEADER_A *prevA, *pA;
 
-                    if (prevI == NULL) holdhA->pItems = pI->pNext;
+        prevA = NULL;
 
-                    else prevI->pNext = pI->pNext;
+        for (pA = holdhB->pHeaderA; pA; prevA = pA, pA = pA->pNext)
+        {
 
-                    delete pI;
+            if (strcmp((char *)pA->cBegin, (char *)holdhA->cBegin) == 0)
+            {
 
-                    break;
+                if (prevA == NULL)
+                    holdhB->pHeaderA = pA->pNext;
 
-             }
+                else
+                    prevA->pNext = pA->pNext;
 
-       }
+                delete pA;
 
-       if (!tmpI) {
+                break;
+            }
+        }
+    }
 
-             HEADER_A* prevA, * pA;
+    if (!holdhA)
+    {
 
-             prevA = NULL;
+        HEADER_B *prevB, *pB;
 
-             for (pA = holdhB->pHeaderA; pA; prevA = pA, pA = pA->pNext) {
+        prevB = NULL;
 
-                    if (strcmp((char*)pA->cBegin, (char*)holdhA->cBegin) == 0) {
+        for (pB = p; pB; prevB = pB, pB = pB->pNext)
+        {
 
-                           if (prevA == NULL) holdhB->pHeaderA = pA->pNext;
+            if (strcmp(&pB->cBegin, (char *)holdhB->cBegin) == 0)
+            {
 
-                           else prevA->pNext = pA->pNext;
+                if (prevB == NULL)
+                    holdhB = pB->pNext;
 
-                           delete pA;
+                else
+                    prevB->pNext = pB->pNext;
 
-                           break;
+                delete pB;
 
-                    }
+                break;
+            }
+        }
+    }
 
-             }
-
-       }
-
-       if (!holdhA) {
-
-             HEADER_B* prevB, * pB;
-
-             prevB = NULL;
-
-             for (pB = p; pB; prevB = pB, pB = pB->pNext) {
-
-                    if (strcmp(&pB->cBegin, (char*)holdhB->cBegin) == 0) {
-
-                           if (prevB == NULL) holdhB = pB->pNext;
-
-                           else prevB->pNext = pB->pNext;
-
-                           delete pB;
-
-                           break;
-
-                    }
-
-             }
-
-       }
-
-       return p;
+    return p;

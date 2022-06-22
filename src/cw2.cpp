@@ -20,1814 +20,1478 @@
 
 #include <exception>
 
- 
-
 using namespace std;
-
- 
 
 class DataStructure
 
 {
 
 private:
+    HEADER_B *dsB;
 
-               HEADER_B* dsB;
+    char *GetWordOne(char *pNewItemID)
 
-               char* GetWordOne(char* pNewItemID)
+    {
 
-               {
+        char *pWordOne = new char;
 
-                              char* pWordOne = new char;
+        char *pSpace = strchr(pNewItemID, ' ');
 
-                              char* pSpace = strchr(pNewItemID, ' ');
+        if (!pSpace)
 
-                              if (!pSpace)
+        {
 
-                              {
+            return NULL;
+        }
 
-                                             return NULL;
+        for (int i = 1; *(pNewItemID + i); i++)
 
-                              }
+        {
 
- 
+            if ((pNewItemID + i) == pSpace)
 
-                              for (int i = 1; *(pNewItemID + i); i++)
+            {
 
-                              {
+                pWordOne = new char[i + 1];
 
-                                             if ((pNewItemID + i) == pSpace)
+                *(pWordOne + i) = '\0';
 
-                                             {
+                break;
+            }
+        }
 
-                                                           
+        if (pSpace)
 
-                                                            pWordOne = new char[i + 1];
+        {
 
-                                                            *(pWordOne + i) = '\0';
+            int i = 0;
 
-                                                            break;
+            for (i = 0; (pNewItemID + i) != pSpace; i++)
 
-                                             }
+            {
 
-                              }
+                *(pWordOne + i) = *(pNewItemID + i);
+            }
+        }
 
- 
+        return pWordOne;
+    }
 
-                              if (pSpace)
+    char *GetWordTwo(char *pNewItemID)
 
-                              {
+    {
 
-                                             int i = 0;
+        char *pWordTwo = new char;
 
- 
+        char *pSpace = strchr(pNewItemID, ' ');
 
-                                             for (i = 0; (pNewItemID + i) != pSpace; i++)
+        if (!pSpace || !(*(pSpace + 1)))
 
-                                             {
+        {
 
-                                                            *(pWordOne + i) = *(pNewItemID + i);
+            return NULL;
+        }
 
-                                             }
+        for (int i = 1; *(pSpace + i); i++)
 
-                              }
+        {
 
- 
+            if (!(*(pSpace + i + 1)))
 
-                              return pWordOne;
+            {
 
-               }
+                pWordTwo = new char[i + 1];
 
- 
+                *(pWordTwo + i) = '\0';
 
-               char* GetWordTwo(char* pNewItemID)
+                break;
+            }
+        }
 
-               {
+        if ((pSpace + 1))
 
-                              char* pWordTwo = new char;
+        {
 
-                              char* pSpace = strchr(pNewItemID, ' ');
+            for (int i = 0; *(pSpace + i + 1); *(pWordTwo + i) = *(pSpace + i + 1), i++)
+                ;
+        }
 
-                              if (!pSpace || !(*(pSpace + 1)))
+        return pWordTwo;
+    }
 
-                              {
+    bool CheckForValidity(char *pChar)
 
-                                             return NULL;
+    {
 
-                              }
+        char *pSpace = strchr(pChar, ' ');
 
- 
+        if (pSpace != NULL)
 
-                              for (int i = 1; *(pSpace + i); i++)
+        {
 
-                              {
+            if (*(pChar + 1) != ' ')
 
-                                             if (!(*(pSpace + i + 1)))
+            {
 
-                                             {
+                return false;
+            }
 
-                                                           
+            if (*(pSpace + 2) != NULL)
 
-                                                            pWordTwo = new char[i + 1];
+            {
 
-                                                            *(pWordTwo + i) = '\0';
+                return false;
+            }
+        }
 
-                                                            break;
+        else
 
-                                             }
+        {
 
-                              }
+            return false;
+        }
 
- 
+        return true;
+    }
 
-                              if ((pSpace + 1))
+    HEADER_B *GetHeaderPos(HEADER_B *pList, char *pChar)
 
-                              {
+    {
 
-                                             for (int i = 0; *(pSpace + i + 1); *(pWordTwo + i) = *(pSpace + i + 1), i++);
+        HEADER_B *pB = pList;
 
-                              }
+        while (pB)
 
- 
+        {
 
-                              return pWordTwo;
+            if (pB->cBegin == *pChar)
 
-               }
+            {
 
-               bool CheckForValidity(char* pChar)
+                return pB;
+            }
 
-               {
+            pB = pB->pNext;
+        }
 
-                              char* pSpace = strchr(pChar, ' ');
+        return NULL;
+    }
 
-                              if (pSpace != NULL)
+    HEADER_A *GetHeaderLastPos(HEADER_A *pA)
 
-                              {
+    {
 
-                                             if (*(pChar + 1) != ' ')
+        HEADER_A *ppA = pA;
 
-                                             {
+        while (ppA)
 
-                                                            return false;
+        {
 
-                                             }
+            if (ppA->pNext == NULL)
 
- 
+            {
 
-                                             if (*(pSpace + 2) != NULL)
+                return ppA;
+            }
 
-                                             {
+            ppA = ppA->pNext;
+        }
 
-                                                            return false;
+        return pA;
+    }
 
-                                             }
+    HEADER_B *GetHeaderLastPos(HEADER_B *pB)
 
-                              }
+    {
 
-                              else
+        if (pB == NULL)
+        {
+            return NULL;
+        }
 
-                              {
+        HEADER_B *ppB = pB;
 
-                                             return false;
+        while (ppB)
 
-                              }
+        {
 
- 
+            if (ppB->pNext == NULL)
 
-                              return true;
+            {
 
-               }
+                return ppB;
+            }
 
-               HEADER_B* GetHeaderPos(HEADER_B* pList, char* pChar)
+            ppB = ppB->pNext;
+        }
 
-               {
+        return pB;
+    }
 
-                              HEADER_B* pB = pList;
+    ITEM4 *GetItemPreviousPos(ITEM4 *pI, ITEM4 *pInitI)
 
-                              while (pB)
+    {
 
-                              {
+        ITEM4 *pPrevItem = pInitI;
 
-                                             if (pB->cBegin == *pChar)
+        while (pPrevItem)
 
-                                             {
+        {
 
-                                                            return pB;
+            if (pPrevItem->pNext == pI)
 
-                                             }
+            {
 
-                                             pB = pB->pNext;
+                return pPrevItem;
+            }
 
-                              }
+            else if (pPrevItem = pI)
 
-                              return NULL;
+            {
 
-               }
+                return NULL;
+            }
 
-               HEADER_A* GetHeaderLastPos(HEADER_A* pA)
+            pPrevItem = pPrevItem->pNext;
+        }
+    }
 
-               {
+    HEADER_B *GetHeaderPreviousPos(HEADER_B *pB, HEADER_B *pInitB)
 
-                              HEADER_A* ppA = pA;
+    {
 
-                              while (ppA)
+        HEADER_B *pPrevItem = pInitB;
 
-                              {
+        while (pPrevItem)
 
-                                             if (ppA->pNext == NULL)
+        {
 
-                                             {
+            if (pPrevItem->pNext == pB)
 
-                                                            return ppA;
+            {
 
-                                             }
+                return pPrevItem;
+            }
 
-                                             ppA = ppA->pNext;
+            else if (pPrevItem == pB)
 
-                              }
+            {
 
- 
+                return NULL;
+            }
 
-                              return pA;
+            pPrevItem = pPrevItem->pNext;
+        }
+    }
 
-               }
+    HEADER_A *GetHeaderPreviousPos(HEADER_A *pA, HEADER_A *pInitA)
 
- 
+    {
 
-               HEADER_B* GetHeaderLastPos(HEADER_B* pB)
+        HEADER_A *pPrevItem = pInitA;
 
-               {
+        while (pPrevItem)
 
-                              if (pB == NULL) { return NULL; }
+        {
 
-                              HEADER_B* ppB = pB;
+            if (pPrevItem->pNext == pA)
 
-                              while (ppB)
+            {
 
-                              {
+                return pPrevItem;
+            }
 
-                                             if (ppB->pNext == NULL)
+            else if (pPrevItem == pA)
 
-                                             {
+            {
 
-                                                            return ppB;
+                return NULL;
+            }
 
-                                             }
-
-                                             ppB = ppB->pNext;
-
-                              }
-
- 
-
-                              return pB;
-
-               }
-
-               ITEM4* GetItemPreviousPos(ITEM4* pI, ITEM4* pInitI)
-
-               {
-
-                              ITEM4* pPrevItem = pInitI;
-
- 
-
-                              while (pPrevItem)
-
-                              {
-
-                                             if (pPrevItem->pNext == pI)
-
-                                             {
-
-                                                            return pPrevItem;
-
-                                             }
-
-                                             else if (pPrevItem = pI)
-
-                                             {
-
-                                                            return NULL;
-
-                                             }
-
-                                             pPrevItem = pPrevItem->pNext;
-
-                              }
-
-               }
-
- 
-
-               HEADER_B* GetHeaderPreviousPos(HEADER_B* pB, HEADER_B* pInitB)
-
-               {
-
-                              HEADER_B* pPrevItem = pInitB;
-
- 
-
-                              while (pPrevItem)
-
-                              {
-
-                                             if (pPrevItem->pNext == pB)
-
-                                             {
-
-                                                            return pPrevItem;
-
-                                             }
-
-                                             else if (pPrevItem == pB)
-
-                                             {
-
-                                                            return NULL;
-
-                                             }
-
-                                             pPrevItem = pPrevItem->pNext;
-
-                              }
-
-               }
-
- 
-
-               HEADER_A* GetHeaderPreviousPos(HEADER_A* pA, HEADER_A* pInitA)
-
-               {
-
-                              HEADER_A* pPrevItem = pInitA;
-
- 
-
-                              while (pPrevItem)
-
-                              {
-
-                                             if (pPrevItem->pNext == pA)
-
-                                             {
-
-                                                            return pPrevItem;
-
-                                             }
-
-                                             else if (pPrevItem == pA)
-
-                                             {
-
-                                                            return NULL;
-
-                                             }
-
-                                             pPrevItem = pPrevItem->pNext;
-
-                              }
-
-               }
+            pPrevItem = pPrevItem->pNext;
+        }
+    }
 
 public:
+    DataStructure()
 
-               DataStructure()
+    {
 
-               {
+        HEADER_B dsB;
+    }
 
-                              HEADER_B dsB;
+    void Open(char *pFilename)
 
-                             
+    {
 
-               }
+        fstream File;
 
-               void Open(char* pFilename)
+        File.open(pFilename, fstream::in | fstream::binary | fstream::app);
 
-               {
+        string buf;
 
-                              fstream File;
+        ITEM4 *newItem = NULL;
 
-                              File.open(pFilename, fstream::in | fstream::binary | fstream::app);
+        try
+        {
 
-                              string buf;
+            if (File.good())
 
-                              ITEM4* newItem = NULL;
+            {
 
- 
+                while (getline(File, buf, ';'))
 
-                              try {
+                {
 
-                                             if (File.good())
+                    if (buf == "\n")
 
-                                             {
+                    {
 
-                                                            while (getline(File, buf, ';'))
+                        break;
+                    }
+
+                    newItem = new ITEM4;
+
+                    char *newID = new char[buf.length() + 1];
+
+                    strcpy_s(newID, buf.length() + 1, buf.c_str());
+
+                    newItem->pID = newID;
+
+                    getline(File, buf, ';');
+
+                    newItem->Code = stoul(buf);
+
+                    getline(File, buf, ';');
+
+                    char *newDate = new char[buf.length() + 1];
+
+                    strcpy_s(newDate, buf.length() + 1, buf.c_str());
+
+                    newItem->pDate = newDate;
+
+                    getline(File, buf, '\n');
+
+                    *this += newItem;
+                }
+            }
+
+            else
+
+            {
+
+                throw exception("Could not open file");
+            }
+        }
+
+        catch (const exception &e)
+
+        {
+
+            cout << e.what() << endl;
+        }
+    }
+
+    ~DataStructure()
+
+    {
+
+        DataDelete();
+    }
+
+    void GetStructure()
+
+    {
+
+        dsB = GetStruct1(4, 10);
+    }
+
+    int GetItemsNumber()
+
+    {
+
+        int counter = 0;
+
+        HEADER_B *pB = dsB;
+
+        HEADER_A *pA;
+
+        ITEM4 *pItem;
+
+        while (pB)
+
+        {
+
+            pA = pB->pHeaderA;
+
+            while (pA)
+
+            {
+
+                if (pA->pItems)
+
+                {
+
+                    pItem = (ITEM4 *)pA->pItems;
+
+                    while (pItem)
+
+                    {
+
+                        counter++;
+
+                        pItem = pItem->pNext;
+                    }
+                }
+
+                pA = pA->pNext;
+            }
+
+            pB = pB->pNext;
+        }
+
+        return counter;
+    }
+
+    ITEM4 *GetItem(char *pID)
+
+    {
+
+        HEADER_B *pB = dsB;
+
+        HEADER_A *pA;
+
+        ITEM4 *pItem;
+
+        try
+        {
+
+            while (pB)
+
+            {
+
+                pA = pB->pHeaderA;
+
+                while (pA)
+
+                {
+
+                    if (pA->pItems)
+
+                    {
+
+                        pItem = (ITEM4 *)pA->pItems;
+
+                        while (pItem)
+
+                        {
+
+                            if (strcmp(pItem->pID, pID) == 0)
+
+                            {
+
+                                return pItem;
+                            }
+
+                            pItem = pItem->pNext;
+                        }
+                    }
+
+                    pA = pA->pNext;
+                }
+
+                pB = pB->pNext;
+            }
+
+            throw exception("No such item");
+        }
+
+        catch (const exception &e)
+
+        {
+
+            cout << e.what() << endl;
+
+            return NULL;
+        }
+    }
+
+    bool CheckItem(char *pID)
+
+    {
+
+        HEADER_B *pB = dsB;
+
+        HEADER_A *pA;
+
+        ITEM4 *pItem;
+
+        while (pB)
+
+        {
+
+            pA = pB->pHeaderA;
+
+            while (pA)
+
+            {
+
+                if (pA->pItems)
+
+                {
+
+                    pItem = (ITEM4 *)pA->pItems;
+
+                    while (pItem)
+
+                    {
+
+                        if (strcmp(pItem->pID, pID) == 0)
+
+                        {
+
+                            return true;
+                        }
+
+                        pItem = pItem->pNext;
+                    }
+                }
+
+                pA = pA->pNext;
+            }
+
+            pB = pB->pNext;
+        }
+
+        return false;
+    }
+
+    void operator+=(ITEM4 *pNewItem)
+
+    {
+
+        pNewItem->pNext = NULL;
+
+        HEADER_B *pList = dsB;
+
+        char *pNewItemID = pNewItem->pID;
+
+        char *pWordOne = GetWordOne(pNewItemID);
+
+        char *pWordTwo = GetWordTwo(pNewItemID);
+
+        HEADER_B *pB = GetHeaderPos(pList, pWordOne);
+
+        if (pB != NULL)
+
+        {
+
+            HEADER_A *pA = pB->pHeaderA;
+
+            while (pA)
+
+            {
+
+                if ((pA) != NULL)
+
+                {
+
+                    ITEM4 *pItems = (ITEM4 *)(pA->pItems);
+
+                    char *pItemWordOne = GetWordOne(pItems->pID);
+
+                    char *pItemWordTwo = GetWordTwo(pItems->pID);
+
+                    if (*pItemWordOne == *pWordOne)
+
+                    {
+
+                        while (pItems)
+
+                        {
+
+                            try
+                            {
+
+                                if (strcmp(pWordOne, pItemWordOne) == 0 && strcmp(pWordTwo, pItemWordTwo) == 0)
+
+                                {
+
+                                    throw exception("ERROR! This ID already exists");
+                                }
+                            }
+
+                            catch (const exception &e)
+
+                            {
+
+                                cout << e.what() << endl;
+
+                                return;
+                            }
+
+                            if (!pItems->pNext)
+
+                            {
+
+                                pItems->pNext = pNewItem;
+
+                                return;
+                            }
+
+                            pItems = pItems->pNext;
+                        }
+                    }
+                }
+
+                pA = pA->pNext;
+            }
+
+            HEADER_A *pLastA = GetHeaderLastPos(pB->pHeaderA);
+
+            HEADER_A *NewA = new HEADER_A;
+
+            try
+            {
+
+                if (NewA && pLastA)
+
+                {
+
+                    NewA->cBegin = *pWordTwo;
+
+                    NewA->pItems = pNewItem;
+
+                    NewA->pNext = NULL;
+
+                    pLastA->pNext = NewA;
+
+                    return;
+                }
+
+                else
+
+                {
+
+                    throw exception("Coudln't allocate memory space");
+                }
+            }
+
+            catch (const exception &e)
+
+            {
+
+                cout << e.what() << endl;
+
+                return;
+            }
+        }
+
+        else
+
+        {
+
+            pB = GetHeaderLastPos(pList);
+
+            HEADER_B *newB = new HEADER_B;
+
+            HEADER_A *newA = new HEADER_A;
+
+            if (newB && newA)
+
+            {
+
+                newA->pItems = pNewItem;
+
+                newA->pNext = NULL;
+
+                newA->cBegin = *pWordTwo;
+
+                newB->cBegin = *pWordOne;
+
+                newB->pNext = NULL;
+
+                newB->pHeaderA = newA;
+
+                if (pB != NULL)
+                {
+
+                    pB->pNext = newB;
+                }
+
+                else
+
+                {
+
+                    dsB = newB;
+                }
+            }
+        }
+    }
+
+    void operator-=(char *pID)
+
+    {
+
+        char *pWordOne = GetWordOne(pID);
+
+        char *pWordTwo = GetWordTwo(pID);
+
+        HEADER_B *pB = dsB;
+
+        try
+        {
+
+            while (pB)
+
+            {
+
+                if (pB->cBegin == *pWordOne)
+
+                {
+
+                    HEADER_A *pA = pB->pHeaderA;
+
+                    while (pA)
+
+                    {
+
+                        if (pA->cBegin == *pWordTwo)
+
+                        {
+
+                            if (pA->pItems != NULL)
+
+                            {
+
+                                ITEM4 *pItem = (ITEM4 *)pA->pItems;
+
+                                while (pItem)
+
+                                {
+
+                                    char *pItemWordOne = GetWordOne(pItem->pID);
+
+                                    char *pItemWordTwo = GetWordTwo(pItem->pID);
+
+                                    if (strcmp(pItemWordOne, pWordOne) == 0 && strcmp(pItemWordTwo, pWordTwo) == 0)
+
+                                    {
+
+                                        ITEM4 *pPrevItem = GetItemPreviousPos(pItem, (ITEM4 *)(pA->pItems));
+
+                                        if (pItem->pNext != NULL && pPrevItem != NULL)
+
+                                        {
+
+                                            ITEM4 *pPrevItem = pItem->pNext;
+
+                                            delete (pItem);
+
+                                            return;
+                                        }
+
+                                        if (pPrevItem == NULL)
+
+                                        {
+
+                                            if (pItem->pNext == NULL)
+
+                                            {
+
+                                                HEADER_A *pPrevA = GetHeaderPreviousPos(pA, pB->pHeaderA);
+
+                                                delete pItem;
+
+                                                if (pPrevA == NULL)
+
+                                                {
+
+                                                    if (pA->pNext == NULL)
+
+                                                    {
+
+                                                        HEADER_B *pPrevB = GetHeaderPreviousPos(pB, dsB);
+
+                                                        delete (pA);
+
+                                                        if (pPrevB == NULL)
+
+                                                        {
+
+                                                            if (pB->pNext)
 
                                                             {
 
-                                                                           if (buf == "\n")
+                                                                dsB = pB->pNext;
 
-                                                                           {
+                                                                delete pB;
 
-                                                                                          break;
-
-                                                                           }
-
-                                                                           newItem = new ITEM4;
-
-                                                                           char* newID = new char[buf.length() + 1];
-
-                                                                           strcpy_s(newID, buf.length() + 1, buf.c_str());
-
-                                                                           newItem->pID = newID;
-
-                                                                           getline(File, buf, ';');
-
-                                                                           newItem->Code = stoul(buf);
-
-                                                                           getline(File, buf, ';');
-
-                                                                           char* newDate = new char[buf.length() + 1];
-
-                                                                           strcpy_s(newDate, buf.length() + 1, buf.c_str());
-
-                                                                           newItem->pDate = newDate;
-
-                                                                           getline(File, buf, '\n');
-
-                                                                           *this += newItem;
-
+                                                                return;
                                                             }
 
-                                             }
+                                                            delete (pB);
 
-                                             else
+                                                            dsB = new HEADER_B;
+                                                        }
 
-                                             {
+                                                        else
 
-                                                            throw exception("Could not open file");
+                                                        {
 
-                                             }
-
-                              }
-
-                              catch (const exception& e)
-
-                              {
-
-                                             cout << e.what() << endl;
-
-                              }
-
-               }
-
- 
-
-               ~DataStructure()
-
-               {
-
-                              DataDelete();
-
-               }
-
-               void GetStructure()
-
-               {
-
-                              dsB = GetStruct1(4, 10);
-
-               }
-
-              
-
-               int GetItemsNumber()
-
-               {
-
-                              int counter = 0;
-
-                              HEADER_B* pB = dsB;
-
-                              HEADER_A* pA;
-
-                              ITEM4* pItem;
-
- 
-
-                              while (pB)
-
-                              {
-
-                                             pA = pB->pHeaderA;
-
-                                             while (pA)
-
-                                             {
-
-                                                            if (pA->pItems)
+                                                            if (pB->pNext != NULL)
 
                                                             {
 
-                                                                           pItem = (ITEM4*)pA->pItems;
-
-                                                                           while (pItem)
-
-                                                                           {
-
-                                                                                          counter++;
-
-                                                                                          pItem = pItem->pNext;
-
-                                                                           }
-
-                                                            }
-
-                                                            pA = pA->pNext;
-
-                                             }
-
-                                             pB = pB->pNext;
-
-                              }
-
-                              return counter;
-
-               }
-
- 
-
-               ITEM4* GetItem(char* pID)
-
-               {
-
-                              HEADER_B* pB = dsB;
-
-                              HEADER_A* pA;
-
-                              ITEM4* pItem;
-
- 
-
-                              try {
-
-                                             while (pB)
-
-                                             {
-
-                                                            pA = pB->pHeaderA;
-
-                                                            while (pA)
-
-                                                            {
-
-                                                                           if (pA->pItems)
-
-                                                                           {
-
-                                                                                          pItem = (ITEM4*)pA->pItems;
-
-                                                                                          while (pItem)
-
-                                                                                          {
-
-                                                                                                         if (strcmp(pItem->pID, pID) == 0)
-
-                                                                                                         {
-
-                                                                                                                        return pItem;
-
-                                                                                                         }
-
-                                                                                                         pItem = pItem->pNext;
-
-                                                                                          }
-
-                                                                           }
-
-                                                                           pA = pA->pNext;
-
-                                                            }
-
-                                                            pB = pB->pNext;
-
-                                             }
-
-                                             throw exception("No such item");
-
-                              }
-
-                              catch (const exception& e)
-
-                              {
-
-                                             cout << e.what() << endl;
-
-                                             return NULL;
-
-                              }
-
-               }
-
- 
-
-               bool CheckItem(char* pID)
-
-               {
-
-                              HEADER_B* pB = dsB;
-
-                              HEADER_A* pA;
-
-                              ITEM4* pItem;
-
- 
-
-                              while (pB)
-
-                              {
-
-                                             pA = pB->pHeaderA;
-
-                                             while (pA)
-
-                                             {
-
-                                                            if (pA->pItems)
-
-                                                            {
-
-                                                                           pItem = (ITEM4*)pA->pItems;
-
-                                                                           while (pItem)
-
-                                                                           {
-
-                                                                                          if (strcmp(pItem->pID, pID) == 0)
-
-                                                                                          {
-
-                                                                                                         return true;
-
-                                                                                          }
-
-                                                                                          pItem = pItem->pNext;
-
-                                                                           }
-
-                                                            }
-
-                                                            pA = pA->pNext;
-
-                                             }
-
-                                             pB = pB->pNext;
-
-                              }
-
-                              return false;
-
-               }
-
- 
-
-               void operator +=(ITEM4* pNewItem)
-
-               {
-
-                              pNewItem->pNext = NULL;
-
-                              HEADER_B* pList = dsB;
-
- 
-
-                              char* pNewItemID = pNewItem->pID;
-
-                              char* pWordOne = GetWordOne(pNewItemID);
-
-                              char* pWordTwo = GetWordTwo(pNewItemID);
-
- 
-
-                              HEADER_B* pB = GetHeaderPos(pList, pWordOne);
-
- 
-
-                              if (pB != NULL)
-
-                              {
-
-                                             HEADER_A* pA = pB->pHeaderA;
-
-                                             while (pA)
-
-                                             {
-
-                                                            if ((pA) != NULL)
-
-                                                            {
-
-                                                                           ITEM4* pItems = (ITEM4*)(pA->pItems);
-
-                                                                           char* pItemWordOne = GetWordOne(pItems->pID);
-
-                                                                           char* pItemWordTwo = GetWordTwo(pItems->pID);
-
- 
-
-                                                                           if (*pItemWordOne == *pWordOne)
-
-                                                                           {
-
- 
-
-                                                                                          while (pItems)
-
-                                                                                          {
-
-                                                                                                         try {
-
-                                                                                                                        if (strcmp(pWordOne, pItemWordOne) == 0 && strcmp(pWordTwo, pItemWordTwo) == 0)
-
-                                                                                                                        {
-
-                                                                                                                                       throw exception("ERROR! This ID already exists");
-
-                                                                                                                        }
-
-                                                                                                         }
-
-                                                                                                         catch (const exception& e)
-
-                                                                                                         {
-
-                                                                                                                        cout << e.what() << endl;
-
-                                                                                                                        return;
-
-                                                                                                         }
-
-                                                                                                         if (!pItems->pNext)
-
-                                                                                                         {
-
-                                                                                                                        pItems->pNext = pNewItem;
-
-                                                                                                                        return;
-
-                                                                                                         }
-
-                                                                                                         pItems = pItems->pNext;
-
-                                                                                          }
-
-                                                                           }
-
-                                                            }
-
-                                                            pA = pA->pNext;
-
-                                             }
-
- 
-
-                                             HEADER_A* pLastA = GetHeaderLastPos(pB->pHeaderA);
-
-                                             HEADER_A* NewA = new HEADER_A;
-
- 
-
-                                             try {
-
-                                                            if (NewA && pLastA)
-
-                                                            {
-
-                                                                           NewA->cBegin = *pWordTwo;
-
-                                                                           NewA->pItems = pNewItem;
-
-                                                                           NewA->pNext = NULL;
-
-                                                                           pLastA->pNext = NewA;
-
-                                                                           return;
-
+                                                                pPrevB->pNext = pB->pNext;
                                                             }
 
                                                             else
 
                                                             {
 
-                                                                           throw exception("Coudln't allocate memory space");
-
+                                                                pPrevB->pNext = NULL;
                                                             }
+                                                        }
+                                                    }
 
-                                             }
+                                                    else
 
-                                             catch (const exception& e)
+                                                    {
 
-                                             {
+                                                        pB->pHeaderA = pA->pNext;
 
-                                                            cout << e.what() << endl;
+                                                        delete pA;
 
-                                                            return;
+                                                        return;
+                                                    }
+                                                }
 
-                                             }
+                                                else if (pPrevA != NULL)
 
-                              }
+                                                {
 
-                              else
+                                                    if (pA->pNext != NULL)
 
-                              {
+                                                    {
 
-                                             pB = GetHeaderLastPos(pList);
+                                                        pPrevA->pNext = pA->pNext;
+                                                    }
 
- 
+                                                    else
 
-                                             HEADER_B* newB = new HEADER_B;
+                                                    {
 
-                                             HEADER_A* newA = new HEADER_A;
+                                                        pPrevA->pNext = NULL;
+                                                    }
 
- 
+                                                    delete pA;
+                                                }
 
-                                             if (newB && newA)
+                                                return;
+                                            }
 
-                                             {
+                                            else
 
-                                                            newA->pItems = pNewItem;
+                                            {
 
-                                                            newA->pNext = NULL;
+                                                pA->pItems = pItem->pNext;
 
-                                                            newA->cBegin = *pWordTwo;
+                                                delete pItem;
 
- 
+                                                return;
+                                            }
+                                        }
 
-                                                            newB->cBegin = *pWordOne;
+                                        else
 
-                                                            newB->pNext = NULL;
+                                        {
 
-                                                            newB->pHeaderA = newA;
+                                            if (pItem->pNext == NULL)
 
-                                                            if (pB != NULL) {
+                                            {
 
-                                                                           pB->pNext = newB;
+                                                pPrevItem->pNext = NULL;
+                                            }
 
-                                                            }
+                                            else
 
-                                                            else
+                                            {
 
-                                                            {
+                                                pPrevItem->pNext = pItem->pNext;
+                                            }
 
-                                                                           dsB = newB;
+                                            delete (pItem);
 
-                                                            }
+                                            return;
+                                        }
+                                    }
 
-                                             }
+                                    pItem = pItem->pNext;
+                                }
+                            }
 
-                              }
+                            else
+                            {
+                                break;
+                            }
+                        }
 
-               }
+                        pA = pA->pNext;
+                    }
+                }
 
- 
+                pB = pB->pNext;
+            }
 
-               void operator-=(char* pID)
+            throw exception("ERROR! No index matches with give input");
+        }
 
-               {
+        catch (const exception &e)
 
-                              char* pWordOne = GetWordOne(pID);
+        {
 
-                              char* pWordTwo = GetWordTwo(pID);
+            cout << e.what() << endl;
 
-                              HEADER_B* pB = dsB;
+            return;
+        }
+    }
 
- 
+    int operator==(DataStructure &Other)
 
-                              try {
+    {
 
-                                             while (pB)
+        if (GetItemsNumber() == Other.GetItemsNumber())
 
-                                             {
+        {
 
-                                                            if (pB->cBegin == *pWordOne)
+            HEADER_B *pB = dsB;
 
-                                                            {
+            HEADER_A *pA;
 
-                                                                           HEADER_A* pA = pB->pHeaderA;
+            ITEM4 *pItem;
 
- 
+            while (pB)
 
-                                                                           while (pA)
+            {
 
-                                                                           {
+                pA = pB->pHeaderA;
 
-                                                                                          if (pA->cBegin == *pWordTwo)
+                while (pA)
 
-                                                                                          {
+                {
 
-                                                                                                         if (pA->pItems != NULL)
+                    if (pA->pItems)
 
-                                                                                                         {
+                    {
 
-                                                                                                                        ITEM4* pItem = (ITEM4*)pA->pItems;
+                        pItem = (ITEM4 *)pA->pItems;
 
- 
+                        while (pItem)
 
-                                                                                                                        while (pItem)
+                        {
 
-                                                                                                                        {
+                            if (!Other.CheckItem(pItem->pID))
 
-                                                                                                                                       char* pItemWordOne = GetWordOne(pItem->pID);
+                            {
 
-                                                                                                                                       char* pItemWordTwo = GetWordTwo(pItem->pID);
+                                return 0;
+                            }
 
- 
+                            pItem = pItem->pNext;
+                        }
+                    }
 
-                                                                                                                                       if (strcmp(pItemWordOne, pWordOne) == 0 && strcmp(pItemWordTwo, pWordTwo) == 0)
+                    pA = pA->pNext;
+                }
 
-                                                                                                                                       {
+                pB = pB->pNext;
+            }
 
-                                                                                                                                                      ITEM4* pPrevItem = GetItemPreviousPos(pItem, (ITEM4*)(pA->pItems));
+            return 1;
+        }
 
-                                                                                                                                                      if (pItem->pNext != NULL && pPrevItem != NULL)
+        else
 
-                                                                                                                                                      {
+        {
 
-                                                                                                                                                                     ITEM4* pPrevItem = pItem->pNext;
+            return 0;
+        }
+    }
 
-                                                                                                                                                                     delete(pItem);
+    void DataCopy(const DataStructure &Original)
 
-                                                                                                                                                                     return;
+    {
 
-                                                                                                                                                      }
+        HEADER_B *pB = Original.dsB;
 
- 
+        HEADER_B *newB = NULL;
 
-                                                                                                                                                      if (pPrevItem == NULL)
+        HEADER_B *newBprev = NULL;
 
-                                                                                                                                                      {
+        while (pB)
 
-                                                                                                                                                                     if (pItem->pNext == NULL)
+        {
 
-                                                                                                                                                                     {
+            newB = new HEADER_B;
 
-                                                                                                                                                                                    HEADER_A* pPrevA = GetHeaderPreviousPos(pA, pB->pHeaderA);
+            newB->cBegin = pB->cBegin;
 
-                                                                                                                                                                                    delete pItem;
+            HEADER_A *pA = pB->pHeaderA;
 
- 
+            HEADER_A *newA = NULL;
 
-                                                                                                                                                                                    if (pPrevA == NULL)
+            HEADER_A *newAprev = NULL;
 
-                                                                                                                                                                                    {
+            while (pA)
 
-                                                                                                                                                                                                   if (pA->pNext == NULL)
+            {
 
-                                                                                                                                                                                                   {
+                newA = new HEADER_A;
 
-                                                                                                                                                                                                                  HEADER_B* pPrevB = GetHeaderPreviousPos(pB, dsB);
+                newA->cBegin = pA->cBegin;
 
-                                                                                                                                                                                                                  delete(pA);
+                ITEM4 *pItem = (ITEM4 *)pA->pItems;
 
- 
+                ITEM4 *newItem = NULL;
 
-                                                                                                                                                                                                                  if (pPrevB == NULL)
+                ITEM4 *newItemprev = NULL;
 
-                                                                                                                                                                                                                  {
+                while (pItem)
 
-                                                                                                                                                                                                                                 if (pB->pNext)
+                {
 
-                                                                                                                                                                                                                                 {
+                    newItem = new ITEM4;
 
-                                                                                                                                                                                                                                                dsB = pB->pNext;
+                    newItem->Code = pItem->Code;
 
-                                                                                                                                                                                                                                                delete pB;
+                    newItem->pID = new char[strlen(pItem->pID) + 1];
 
-                                                                                                                                                                                                                                                return;
+                    strcpy_s(newItem->pID, strlen(pItem->pID) + 1, pItem->pID);
 
-                                                                                                                                                                                                                                 }
+                    newItem->pDate = new char[strlen(pItem->pDate) + 1];
 
-                                                                                                                                                                                                                                 delete(pB);
+                    strcpy_s(newItem->pDate, strlen(pItem->pDate) + 1, pItem->pDate);
 
-                                                                                                                                                                                                                                 dsB = new HEADER_B;
+                    if (newItemprev != NULL)
 
-                                                                                                                                                                                                                  }
+                    {
 
-                                                                                                                                                                                                                  else
+                        newItemprev->pNext = newItem;
+                    }
 
-                                                                                                                                                                                                                  {
+                    else
 
-                                                                                                                                                                                                                                 if (pB->pNext != NULL)
+                    {
 
-                                                                                                                                                                                                                                 {
+                        newA->pItems = newItem;
+                    }
 
-                                                                                                                                                                                                                                                pPrevB->pNext = pB->pNext;
+                    newItemprev = newItem;
 
-                                                                                                                                                                                                                                 }
+                    if (!pItem->pNext)
 
-                                                                                                                                                                                                                                 else
+                    {
 
-                                                                                                                                                                                                                                 {
+                        newItem->pNext = NULL;
+                    }
 
-                                                                                                                                                                                                                                                pPrevB->pNext = NULL;
+                    pItem = pItem->pNext;
+                }
 
-                                                                                                                                                                                                                                 }
+                if (newAprev != NULL)
 
-                                                                                                                                                                                                                  }
+                {
 
-                                                                                                                                                                                                   }
+                    newAprev->pNext = newA;
+                }
 
-                                                                                                                                                                                                   else
+                else
 
-                                                                                                                                                                                                   {
+                {
 
-                                                                                                                                                                                                                  pB->pHeaderA = pA->pNext;
+                    newB->pHeaderA = newA;
+                }
 
-                                                                                                                                                                                                                  delete pA;
+                newAprev = newA;
 
-                                                                                                                                                                                                                  return;
+                if (!pA->pNext)
 
-                                                                                                                                                                                                   }
+                {
 
-                                                                                                                                                                                    }
+                    newA->pNext = NULL;
+                }
 
-                                                                                                                                                                                    else if (pPrevA != NULL)
+                pA = pA->pNext;
+            }
 
-                                                                                                                                                                                    {
+            if (newBprev != NULL)
 
-                                                                                                                                                                                                   if (pA->pNext != NULL)
+            {
 
-                                                                                                                                                                                                   {
+                newBprev->pNext = newB;
+            }
 
-                                                                                                                                                                                                                  pPrevA->pNext = pA->pNext;
+            else
 
-                                                                                                                                                                                                   }
+            {
 
-                                                                                                                                                                                                   else
+                dsB = newB;
+            }
 
-                                                                                                                                                                                                   {
+            newBprev = newB;
 
-                                                                                                                                                                                                                  pPrevA->pNext = NULL;
+            if (!pB->pNext)
 
-                                                                                                                                                                                                   }
+            {
 
-                                                                                                                                                                                                   delete pA;
+                newB->pNext = NULL;
+            }
 
-                                                                                                                                                                                    }
+            pB = pB->pNext;
+        }
+    }
 
-                                                                                                                                                                                    return;
+    void DataDelete()
 
-                                                                                                                                                                     }
+    {
 
-                                                                                                                                                                     else
+        HEADER_B *pB = dsB;
 
-                                                                                                                                                                     {
+        HEADER_B *pBprev = NULL;
 
-                                                                                                                                                                                    pA->pItems = pItem->pNext;
+        while (pB)
 
-                                                                                                                                                                                    delete pItem;
+        {
 
-                                                                                                                                                                                    return;
+            HEADER_A *pA = pB->pHeaderA;
 
-                                                                                                                                                                     }
+            HEADER_A *pAprev = NULL;
 
-                                                                                                                                                      }
+            while (pA)
 
-                                                                                                                                                      else
+            {
 
-                                                                                                                                                      {
+                ITEM4 *pItem = (ITEM4 *)pA->pItems;
 
-                                                                                                                                                                     if (pItem->pNext == NULL)
+                ITEM4 *pItemprev = NULL;
 
-                                                                                                                                                                     {
+                while (pItem)
 
-                                                                                                                                                                                    pPrevItem->pNext = NULL;
+                {
 
-                                                                                                                                                                     }
+                    if (pItemprev != NULL)
 
-                                                                                                                                                                     else
+                    {
 
-                                                                                                                                                                     {
+                        delete pItemprev;
+                    }
 
-                                                                                                                                                                                    pPrevItem->pNext = pItem->pNext;
+                    pItemprev = pItem;
 
-                                                                                                                                                                     }
+                    if (!pItem->pNext)
 
-                                                                                                                                                                     delete(pItem);
+                    {
 
-                                                                                                                                                                     return;
+                        delete pItem;
 
-                                                                                                                                                      }
+                        break;
+                    }
 
-                                                                                                                                       }
+                    else
 
-                                                                                                                                       pItem = pItem->pNext;
+                    {
 
-                                                                                                                        }
+                        pItem = pItem->pNext;
+                    }
+                }
 
-                                                                                                         }
+                if (pAprev != NULL)
 
-                                                                                                         else { break; }
+                {
 
-                                                                                          }
+                    delete pAprev;
+                }
 
-                                                                                          pA = pA->pNext;
+                pAprev = pA;
 
-                                                                           }
+                if (!pA->pNext)
 
-                                                            }
+                {
 
-                                                            pB = pB->pNext;
+                    delete pA;
 
-                                             }
+                    break;
+                }
 
-                                             throw exception("ERROR! No index matches with give input");
+                else
 
-                              }
+                {
 
-                              catch (const exception& e)
+                    pA = pA->pNext;
+                }
+            }
 
-                              {
+            if (pBprev != NULL)
 
-                                             cout << e.what() << endl;
+            {
 
-                                             return;
+                delete pBprev;
+            }
 
-                              }
+            pBprev = pB;
 
-               }
+            if (!pB->pNext)
 
- 
+            {
 
-               int operator==(DataStructure& Other)
+                delete pB;
 
-               {
+                break;
+            }
 
-                              if (GetItemsNumber() == Other.GetItemsNumber())
+            else
 
-                              {
+            {
 
-                                             HEADER_B* pB = dsB;
+                pB = pB->pNext;
+            }
+        }
+    }
 
-                                             HEADER_A* pA;
+    DataStructure(const DataStructure &Original)
 
-                                             ITEM4* pItem;
+    {
 
- 
+        DataCopy(Original);
+    }
 
-                                             while (pB)
+    DataStructure &operator=(const DataStructure &Right)
 
-                                             {
+    {
 
-                                                            pA = pB->pHeaderA;
+        DataDelete();
 
-                                                            while (pA)
+        DataCopy(Right);
 
-                                                            {
+        return *this;
+    }
 
-                                                                           if (pA->pItems)
+    void Write(char *pFilename)
 
-                                                                           {
+    {
 
-                                                                                          pItem = (ITEM4*)pA->pItems;
+        ofstream File;
 
-                                                                                          while (pItem)
+        File.open(pFilename, ofstream::out | ofstream::binary | ofstream::trunc);
 
-                                                                                          {
+        if (File.good())
 
-                                                                                                         if (!Other.CheckItem(pItem->pID))
+        {
 
-                                                                                                         {
+            HEADER_B *pB = dsB;
 
-                                                                                                                        return 0;
+            while (pB)
 
-                                                                                                         }
+            {
 
-                                                                                                         pItem = pItem->pNext;
+                HEADER_A *pA = pB->pHeaderA;
 
-                                                                                          }
+                while (pA)
 
-                                                                           }
+                {
 
-                                                                           pA = pA->pNext;
+                    ITEM4 *pItem = (ITEM4 *)pA->pItems;
 
-                                                            }
+                    while (pItem)
 
-                                                            pB = pB->pNext;
+                    {
 
-                                             }
+                        File << pItem->pID << ";" << pItem->Code << ";" << pItem->pDate << ";\n";
 
-                                             return 1;
+                        pItem = pItem->pNext;
+                    }
 
-                              }
+                    pA = pA->pNext;
+                }
 
-                              else
+                pB = pB->pNext;
+            }
+        }
 
-                              {
+        else
 
-                                             return 0;
+        {
 
-                              }
+            cout << "Could not open file";
+        }
 
-               }
+        File.close();
+    }
 
- 
+    friend std::ostream &operator<<(std::ostream &ostr, const DataStructure &str)
 
-               void DataCopy(const DataStructure& Original)
+    {
 
-               {
+        HEADER_B *pB = str.dsB;
 
-                              HEADER_B* pB = Original.dsB;
+        const char separator = ' ';
 
-                              HEADER_B* newB = NULL;
+        const int nameWidth = 30;
 
-                              HEADER_B* newBprev = NULL;
+        const int numWidth = 20;
 
- 
+        int counter = 1;
 
-                              while (pB)
+        cout << "[ID] " << left << setw(nameWidth) << setfill(separator) << "[NAME]" << setw(numWidth) << setfill(separator) << "[CODE]" << setw(numWidth) << setfill(separator) << "[DATE]" << endl;
 
-                              {
+        while (pB)
 
-                                             newB = new HEADER_B;
+        {
 
- 
+            HEADER_A *pA = pB->pHeaderA;
 
-                                             newB->cBegin = pB->cBegin;
+            while (pA)
 
-                                             HEADER_A* pA = pB->pHeaderA;
+            {
 
-                                             HEADER_A* newA = NULL;
+                ITEM4 *res = (ITEM4 *)pA->pItems;
 
-                                             HEADER_A* newAprev = NULL;
+                while (res)
 
-                                             while (pA)
+                {
 
-                                             {
+                    if (counter < 10)
+                    {
+                        cout << "0";
+                    }
 
-                                                            newA = new HEADER_A;
+                    cout << counter << ") " << left << setw(nameWidth) << setfill(separator) << res->pID << setw(numWidth) << setfill(separator) << res->Code << setw(numWidth) << setfill(separator) << res->pDate << endl;
 
-                                                            newA->cBegin = pA->cBegin;
+                    counter++;
 
- 
+                    res = res->pNext;
+                }
 
-                                                            ITEM4* pItem = (ITEM4*)pA->pItems;
+                pA = pA->pNext;
+            }
 
-                                                            ITEM4* newItem = NULL;
+            pB = pB->pNext;
+        }
 
-                                                            ITEM4* newItemprev = NULL;
+        return cout;
+    }
 
-                                                            while (pItem)
+    void PrintDataStructure()
 
-                                                            {
+    {
 
-                                                                           newItem = new ITEM4;
+        HEADER_B *pB = dsB;
 
-                                                                           newItem->Code = pItem->Code;
+        const char separator = ' ';
 
-                                                                           newItem->pID = new char[strlen(pItem->pID) + 1];
+        const int nameWidth = 30;
 
-                                                                           strcpy_s(newItem->pID, strlen(pItem->pID) + 1, pItem->pID);
+        const int numWidth = 20;
 
-                                                                           newItem->pDate = new char[strlen(pItem->pDate) + 1];
+        int counter = 1;
 
-                                                                           strcpy_s(newItem->pDate, strlen(pItem->pDate) + 1, pItem->pDate);
+        while (pB)
 
-                                                                           if (newItemprev != NULL)
+        {
 
-                                                                           {
+            HEADER_A *pA = pB->pHeaderA;
 
-                                                                                          newItemprev->pNext = newItem;
+            while (pA)
 
-                                                                           }
+            {
 
-                                                                           else
+                ITEM4 *res = (ITEM4 *)pA->pItems;
 
-                                                                           {
+                while (res)
 
-                                                                                          newA->pItems = newItem;
+                {
 
-                                                                           }
+                    if (counter < 10)
+                    {
+                        cout << "0";
+                    }
 
- 
+                    cout << counter << ") " << left << setw(nameWidth) << setfill(separator) << res->pID << setw(numWidth) << setfill(separator) << res->Code << setw(numWidth) << setfill(separator) << res->pDate << endl;
 
-                                                                           newItemprev = newItem;
+                    counter++;
 
-                                                                           if (!pItem->pNext)
+                    res = res->pNext;
+                }
 
-                                                                           {
+                pA = pA->pNext;
+            }
 
-                                                                                          newItem->pNext = NULL;
-
-                                                                           }
-
-                                                                           pItem = pItem->pNext;
-
-                                                            }
-
-                                                            if (newAprev != NULL)
-
-                                                            {
-
-                                                                           newAprev->pNext = newA;
-
-                                                            }
-
-                                                            else
-
-                                                            {
-
-                                                                           newB->pHeaderA = newA;
-
-                                                            }
-
- 
-
-                                                            newAprev = newA;
-
-                                                            if (!pA->pNext)
-
-                                                            {
-
-                                                                           newA->pNext = NULL;
-
-                                                            }
-
-                                                            pA = pA->pNext;
-
-                                             }
-
-                                             if (newBprev != NULL)
-
-                                             {
-
-                                                            newBprev->pNext = newB;
-
-                                             }
-
-                                             else
-
-                                             {
-
-                                                            dsB = newB;
-
-                                             }
-
- 
-
-                                             newBprev = newB;
-
-                                             if (!pB->pNext)
-
-                                             {
-
-                                                            newB->pNext = NULL;
-
-                                             }
-
-                                             pB = pB->pNext;
-
-                              }
-
-               }
-
- 
-
-               void DataDelete()
-
-               {
-
-                              HEADER_B* pB = dsB;
-
-                              HEADER_B* pBprev = NULL;
-
- 
-
-                              while (pB)
-
-                              {
-
-                                             HEADER_A* pA = pB->pHeaderA;
-
-                                             HEADER_A* pAprev = NULL;
-
-                                             while (pA)
-
-                                             {
-
-                                                            ITEM4* pItem = (ITEM4*)pA->pItems;
-
-                                                            ITEM4* pItemprev = NULL;
-
-                                                            while (pItem)
-
-                                                            {
-
-                                                                           if (pItemprev != NULL)
-
-                                                                           {
-
-                                                                                          delete pItemprev;
-
-                                                                           }
-
- 
-
-                                                                           pItemprev = pItem;
-
-                                                                           if (!pItem->pNext)
-
-                                                                           {
-
-                                                                                          delete pItem;
-
-                                                                                          break;
-
-                                                                           }
-
-                                                                           else
-
-                                                                           {
-
-                                                                                          pItem = pItem->pNext;
-
-                                                                           }
-
-                                                            }
-
-                                                            if (pAprev != NULL)
-
-                                                            {
-
-                                                                           delete pAprev;
-
-                                                            }
-
- 
-
-                                                            pAprev = pA;
-
-                                                            if (!pA->pNext)
-
-                                                            {
-
-                                                                           delete pA;
-
-                                                                           break;
-
-                                                            }
-
-                                                            else
-
-                                                            {
-
-                                                                           pA = pA->pNext;
-
-                                                            }
-
-                                             }
-
-                                             if (pBprev != NULL)
-
-                                             {
-
-                                                            delete pBprev;
-
-                                             }
-
- 
-
-                                             pBprev = pB;
-
-                                             if (!pB->pNext)
-
-                                             {
-
-                                                            delete pB;
-
-                                                            break;
-
-                                             }
-
-                                             else
-
-                                             {
-
-                                                            pB = pB->pNext;
-
-                                             }
-
-                              }
-
-               }
-
- 
-
-               DataStructure(const DataStructure& Original)
-
-               {
-
-                              DataCopy(Original);
-
-               }
-
- 
-
-               DataStructure& operator=(const DataStructure& Right)
-
-               {
-
-                              DataDelete();
-
-                              DataCopy(Right);
-
-                              return *this;
-
-               }
-
- 
-
-               void Write(char* pFilename)
-
-               {
-
-                              ofstream File;
-
-                              File.open(pFilename, ofstream::out | ofstream::binary | ofstream::trunc);
-
- 
-
-                              if (File.good())
-
-                              {
-
-                                             HEADER_B* pB = dsB;
-
-                                             while (pB)
-
-                                             {
-
-                                                            HEADER_A* pA = pB->pHeaderA;
-
- 
-
-                                                            while (pA)
-
-                                                            {
-
-                                                                           ITEM4* pItem = (ITEM4*)pA->pItems;
-
- 
-
-                                                                           while (pItem)
-
-                                                                           {
-
-                                                                                          File << pItem->pID << ";" << pItem->Code << ";" << pItem->pDate << ";\n";
-
- 
-
-                                                                                          pItem = pItem->pNext;
-
-                                                                           }
-
- 
-
-                                                                           pA = pA->pNext;
-
-                                                            }
-
- 
-
-                                                            pB = pB->pNext;
-
-                                             }
-
-                              }
-
-                              else
-
-                              {
-
-                                             cout << "Could not open file";
-
-                              }
-
-                              File.close();
-
-               }
-
- 
-
-               friend std::ostream& operator<<(std::ostream& ostr, const DataStructure& str)
-
-               {
-
-                              HEADER_B* pB = str.dsB;
-
-                              const char separator = ' ';
-
-                              const int nameWidth = 30;
-
-                              const int numWidth = 20;
-
- 
-
-                              int counter = 1;
-
- 
-
-                              cout << "[ID] " << left << setw(nameWidth) << setfill(separator) << "[NAME]" << setw(numWidth) << setfill(separator) << "[CODE]" << setw(numWidth) << setfill(separator) << "[DATE]" << endl;
-
- 
-
-                              while (pB)
-
-                              {
-
-                                             HEADER_A* pA = pB->pHeaderA;
-
- 
-
-                                             while (pA)
-
-                                             {
-
-                                                            ITEM4* res = (ITEM4*)pA->pItems;
-
-                                                            while (res)
-
-                                                            {
-
-                                                                           if (counter < 10) { cout << "0"; }
-
-                                                                           cout << counter << ") " << left << setw(nameWidth) << setfill(separator) << res->pID << setw(numWidth) << setfill(separator) << res->Code << setw(numWidth) << setfill(separator) << res->pDate << endl;
-
-                                                                           counter++;
-
- 
-
-                                                                           res = res->pNext;
-
-                                                            }
-
-                                                            pA = pA->pNext;
-
-                                             }
-
- 
-
-                                             pB = pB->pNext;
-
-                              }
-
-                              return cout;
-
-               }
-
- 
-
-               void PrintDataStructure()
-
-               {
-
-                              HEADER_B* pB = dsB;
-
-                              const char separator = ' ';
-
-                              const int nameWidth = 30;
-
-                              const int numWidth = 20;
-
- 
-
-                              int counter = 1;
-
- 
-
-                             
-
- 
-
-                              while (pB)
-
-                              {
-
-                                             HEADER_A* pA = pB->pHeaderA;
-
- 
-
-                                             while (pA)
-
-                                             {
-
-                                                            ITEM4* res = (ITEM4*)pA->pItems;
-
-                                                            while (res)
-
-                                                            {
-
-                                                                           if (counter < 10) { cout << "0"; }
-
-                                                                           cout << counter << ") " << left << setw(nameWidth) << setfill(separator) << res->pID << setw(numWidth) << setfill(separator) << res->Code << setw(numWidth) << setfill(separator) << res->pDate << endl;
-
-                                                                           counter++;
-
- 
-
-                                                                           res = res->pNext;
-
-                                                            }
-
-                                                            pA = pA->pNext;
-
-                                             }
-
- 
-
-                                             pB = pB->pNext;
-
-                              }
-
-               }
-
- 
-
+            pB = pB->pNext;
+        }
+    }
 };
-
- 
 
 int main()
 
 {
 
-               try {
+    try
+    {
 
-                             
+        DataStructure ds;
 
-                              DataStructure ds;
+        for (int i = 0; i < 10; i++)
 
-                              for (int i = 0; i < 10; i++)
+        {
 
-                              {
+            ds += (ITEM4 *)GetItem(4);
+        }
 
-                                             ds += (ITEM4*)GetItem(4);
+        cout << ds << endl
+             << ds.GetItemsNumber() << endl;
 
-                              }
+        ITEM4 *someItem = ds.GetItem((char *)"Light Cyan");
 
-                              cout << ds << endl << ds.GetItemsNumber() << endl;
+        cout << someItem->pID << endl
+             << someItem->Code << endl
+             << someItem->pDate << endl;
 
-                              ITEM4* someItem = ds.GetItem((char*)"Light Cyan");
+        someItem = ds.GetItem((char *)"X X");
 
-                              cout << someItem->pID << endl << someItem->Code << endl << someItem->pDate << endl;
+        cout << ds;
 
- 
+        DataStructure ds2 = ds;
 
-                              someItem = ds.GetItem((char*)"X X");
+        ds -= (char *)"Banana Mania";
 
-                              cout << ds;
+        ds -= (char *)"Persian Green";
 
-                              DataStructure ds2 = ds;
+        ds -= (char *)"Vegas Gold";
 
-                              ds -= (char*)"Banana Mania";
+        cout << "DataStrcutres are: (0- DIFF, 1-SAME): " << (ds == ds2) << endl;
 
-                              ds -= (char*)"Persian Green";
+        ds.Write((char *)"result.txt");
 
-                              ds -= (char*)"Vegas Gold";
+        DataStructure ds3;
 
-                              cout << "DataStrcutres are: (0- DIFF, 1-SAME): " << (ds == ds2) << endl;
+        ds3.Open((char *)"result.txt");
 
-                              ds.Write((char*)"result.txt");
+        cout << "DataStrcutres are (0- DIFF, 1-SAME): " << (ds2 == ds3) << endl;
 
-                              DataStructure ds3;
+        ds2 = ds3;
 
-                              ds3.Open((char*)"result.txt");
+        cout << ds2 << endl;
+    }
 
-                              cout << "DataStrcutres are (0- DIFF, 1-SAME): " << (ds2 == ds3) << endl;
+    catch (const exception &e)
 
-                              ds2 = ds3;
+    {
 
-                              cout << ds2 << endl;
+        cout << e.what() << endl;
 
-                             
+        return 0;
+    }
 
- 
-
-               }
-
-               catch (const exception& e)
-
-               {
-
-                              cout << e.what() << endl;
-
-                              return 0;
-
-               }
-
- 
-
-               return 0;
-
+    return 0;
 }
